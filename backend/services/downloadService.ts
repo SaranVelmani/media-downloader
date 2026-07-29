@@ -36,7 +36,6 @@ async function streamMergedVideo(url: string, formatId: string, res: Response): 
   await fs.promises.mkdir(env.tempDir, { recursive: true });
   const jobId = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
   const outTemplate = path.join(env.tempDir, `${jobId}.%(ext)s`);
-  const expectedFile = path.join(env.tempDir, `${jobId}.mp4`);
 
   await new Promise<void>((resolve, reject) => {
     const child = spawnYtDlpVideoDownload(url, formatId, outTemplate, env.ffmpegPath);
@@ -52,12 +51,15 @@ async function streamMergedVideo(url: string, formatId: string, res: Response): 
     });
   });
 
-  if (!fs.existsSync(expectedFile)) {
+  const produced = (await fs.promises.readdir(env.tempDir)).find((name) => name.startsWith(`${jobId}.`));
+  if (!produced) {
     throw new AppError("CONVERSION_FAILED", "Video merge failed to produce an output file.", 500);
   }
+  const expectedFile = path.join(env.tempDir, produced);
+  const ext = path.extname(produced).slice(1) || "mp4";
 
   res.setHeader("Content-Type", "application/octet-stream");
-  res.setHeader("Content-Disposition", `attachment; filename="${safeFilename(jobId, "mp4")}"`);
+  res.setHeader("Content-Disposition", `attachment; filename="${safeFilename(jobId, ext)}"`);
 
   const cleanup = () => fs.promises.unlink(expectedFile).catch(() => {});
   const readStream = fs.createReadStream(expectedFile);
