@@ -58,13 +58,15 @@ export function UrlAnalyzer() {
             autoComplete="off"
           />
         </div>
-        <button
+        <motion.button
           type="submit"
           disabled={mutation.isPending}
-          className="rounded-xl bg-gradient-to-br from-violet-500 to-blue-500 px-6 py-2.5 text-sm font-semibold text-white transition-transform hover:scale-[1.02] active:scale-95 disabled:opacity-60"
+          className="relative overflow-hidden rounded-xl bg-gradient-to-br from-violet-500 to-blue-500 px-6 py-2.5 text-sm font-semibold text-white transition-transform hover:scale-[1.02] active:scale-95 disabled:opacity-60"
+          animate={{ boxShadow: ["0 0 0px rgba(139,92,246,0)", "0 0 18px rgba(139,92,246,0.55)", "0 0 0px rgba(139,92,246,0)"] }}
+          transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
         >
           {mutation.isPending ? LOADING_PHRASES[phraseIndex] : "Analyze"}
-        </button>
+        </motion.button>
       </form>
 
       <AnimatePresence>

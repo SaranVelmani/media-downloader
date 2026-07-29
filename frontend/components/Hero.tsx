@@ -13,7 +13,14 @@ export function Hero() {
         className="text-4xl font-bold tracking-tight sm:text-6xl"
       >
         Download Videos &amp; Audio in{" "}
-        <span className="bg-gradient-to-br from-violet-500 to-blue-500 bg-clip-text text-transparent">Seconds</span>
+        <motion.span
+          className="inline-block bg-gradient-to-r from-violet-500 via-blue-500 to-violet-500 bg-clip-text text-transparent"
+          style={{ backgroundSize: "200% auto" }}
+          animate={{ backgroundPosition: ["0% center", "200% center"] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+        >
+          Seconds
+        </motion.span>
       </motion.h1>
       <motion.p
         initial={{ opacity: 0, y: 16 }}

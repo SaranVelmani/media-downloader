@@ -63,9 +63,6 @@ export function FormatTable({ media }: { media: MediaInfo }) {
                 <th className="px-4 py-3 font-medium">Resolution</th>
                 <th className="px-4 py-3 font-medium">Ext</th>
                 <th className="px-4 py-3 font-medium">Size</th>
-                <th className="px-4 py-3 font-medium">FPS</th>
-                <th className="px-4 py-3 font-medium">Codec</th>
-                <th className="px-4 py-3 font-medium">HDR</th>
                 <th className="px-4 py-3 font-medium" />
               </tr>
             </thead>
@@ -77,9 +74,6 @@ export function FormatTable({ media }: { media: MediaInfo }) {
                     <td className="px-4 py-3 font-medium">{f.resolution}</td>
                     <td className="px-4 py-3 uppercase text-foreground/70">{f.ext}</td>
                     <td className="px-4 py-3 text-foreground/70">{formatBytes(f.filesizeBytes)}</td>
-                    <td className="px-4 py-3 text-foreground/70">{f.fps ?? "—"}</td>
-                    <td className="px-4 py-3 text-foreground/70">{f.vcodec ?? "—"}</td>
-                    <td className="px-4 py-3 text-foreground/70">{f.hdr ? "Yes" : "No"}</td>
                     <td className="px-4 py-3 text-right">
                       <button
                         onClick={() => handleVideoDownload(f.formatId, f.ext)}
@@ -95,7 +89,7 @@ export function FormatTable({ media }: { media: MediaInfo }) {
               })}
               {media.videoFormats.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="px-4 py-6 text-center text-foreground/50">
+                  <td colSpan={4} className="px-4 py-6 text-center text-foreground/50">
                     No video formats available.
                   </td>
                 </tr>

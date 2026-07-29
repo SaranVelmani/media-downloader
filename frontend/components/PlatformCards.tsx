@@ -8,7 +8,7 @@ const SUPPORTED = [
   { name: "YouTube", icon: Youtube, status: "Supported" },
 ];
 
-const COMING_SOON = ["TikTok", "Facebook", "Twitter / X", "Vimeo"];
+const COMING_SOON = ["Facebook", "Snapchat"];
 
 export function PlatformCards() {
   return (
