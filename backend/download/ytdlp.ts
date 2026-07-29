@@ -63,7 +63,6 @@ export function spawnYtDlpVideoDownload(url: string, formatId: string, outTempla
     [
       "-m", "yt_dlp",
       "-f", `${formatId}+bestaudio/best`,
-      "--no-warnings",
       "--no-playlist",
       "--merge-output-format", "mp4",
       "--ffmpeg-location", ffmpegPath,

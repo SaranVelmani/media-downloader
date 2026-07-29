@@ -43,6 +43,7 @@ async function streamMergedVideo(url: string, formatId: string, res: Response): 
     child.stderr.on("data", (chunk) => (stderr += chunk.toString()));
     child.on("error", (err) => reject(new AppError("SERVER_BUSY", `Downloader failed to start: ${err.message}`, 500)));
     child.on("close", (code) => {
+      console.log(`[video-download ${jobId}] yt-dlp exit ${code}\n${stderr}`);
       if (code !== 0) {
         reject(classifyProviderError(stderr || `yt-dlp exited with code ${code}`));
         return;
