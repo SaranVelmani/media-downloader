@@ -57,13 +57,13 @@ export function FormatTable({ media }: { media: MediaInfo }) {
       <div>
         <h4 className="mb-3 text-sm font-semibold uppercase tracking-wide text-foreground/60">Video formats</h4>
         <div className="glass rounded-2xl">
-          <table className="w-full table-fixed text-xs sm:text-sm">
+          <table className="w-full table-fixed text-xs sm:table-auto sm:text-sm">
             <thead>
               <tr className="border-b border-surface-border/60 text-left text-foreground/60">
-                <th className="w-[30%] px-2 py-3 font-medium sm:px-4">Resolution</th>
-                <th className="w-[18%] px-2 py-3 font-medium sm:px-4">Ext</th>
-                <th className="w-[22%] px-2 py-3 font-medium sm:px-4">Size</th>
-                <th className="w-[30%] px-2 py-3 font-medium sm:px-4" />
+                <th className="w-[30%] px-2 py-3 font-medium sm:w-auto sm:px-4">Resolution</th>
+                <th className="w-[18%] px-2 py-3 font-medium sm:w-auto sm:px-4">Ext</th>
+                <th className="w-[22%] px-2 py-3 font-medium sm:w-auto sm:px-4">Size</th>
+                <th className="w-[30%] px-2 py-3 font-medium sm:w-auto sm:px-4" />
               </tr>
             </thead>
             <tbody>
@@ -78,7 +78,7 @@ export function FormatTable({ media }: { media: MediaInfo }) {
                       <button
                         onClick={() => handleVideoDownload(f.formatId, f.ext)}
                         disabled={pending === key}
-                        className="inline-flex items-center gap-1 rounded-full bg-violet-500 px-2.5 py-1.5 text-[11px] font-medium text-white transition-transform hover:scale-105 active:scale-95 disabled:opacity-60 sm:gap-1.5 sm:px-3 sm:text-xs"
+                        className="inline-flex items-center gap-1 whitespace-nowrap rounded-full bg-violet-500 px-2.5 py-1.5 text-[11px] font-medium text-white transition-transform hover:scale-105 active:scale-95 disabled:opacity-60 sm:gap-1.5 sm:px-3 sm:text-xs"
                       >
                         {pending === key ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Download className="h-3.5 w-3.5" />}
                         <span className="hidden sm:inline">Download</span>
