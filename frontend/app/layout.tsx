@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Media Downloader — Download Videos & Audio in Seconds",
+  title: "M-Downloader — Download Videos & Audio in Seconds",
   description: "Paste a supported media URL and download available formats.",
 };
 

@@ -15,7 +15,7 @@ const FEATURES = [
 export function FeaturesGrid() {
   return (
     <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6" id="features">
-      <h2 className="text-center text-2xl font-semibold tracking-tight sm:text-3xl">Why Media Downloader</h2>
+      <h2 className="text-center text-2xl font-semibold tracking-tight sm:text-3xl">Why M-Downloader</h2>
       <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {FEATURES.map((f, i) => (
           <motion.div
