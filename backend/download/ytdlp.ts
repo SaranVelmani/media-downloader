@@ -1,6 +1,14 @@
 import { spawn } from "child_process";
+import path from "path";
 import { env } from "../config/env";
 import { AppError, classifyProviderError } from "../utils/errors";
+
+// yt-dlp treats --ffmpeg-location as a literal path, not a PATH lookup.
+// Only pass it when we have a real absolute path (Windows); otherwise let
+// yt-dlp find ffmpeg on PATH itself (true on Linux hosts like Render).
+function ffmpegLocationArgs(ffmpegPath: string): string[] {
+  return path.isAbsolute(ffmpegPath) ? ["--ffmpeg-location", ffmpegPath] : [];
+}
 
 function runYtDlp(args: string[], timeoutMs = env.requestTimeoutMs): Promise<{ stdout: Buffer; stderr: string }> {
   return new Promise((resolve, reject) => {
@@ -65,7 +73,7 @@ export function spawnYtDlpVideoDownload(url: string, formatId: string, outTempla
       "-f", `${formatId}+bestaudio/best`,
       "--no-playlist",
       "--merge-output-format", "mp4",
-      "--ffmpeg-location", ffmpegPath,
+      ...ffmpegLocationArgs(ffmpegPath),
       "-o", outTemplate,
       url,
     ],
@@ -84,7 +92,7 @@ export function spawnYtDlpAudioExtract(url: string, outFile: string, audioFormat
       "--extract-audio",
       "--audio-format", audioFormat,
       "--audio-quality", "0",
-      "--ffmpeg-location", ffmpegPath,
+      ...ffmpegLocationArgs(ffmpegPath),
       "-o", outFile,
       url,
     ],
