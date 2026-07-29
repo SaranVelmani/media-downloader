@@ -57,6 +57,23 @@ export function spawnYtDlpStream(url: string, formatId: string) {
   );
 }
 
+export function spawnYtDlpVideoDownload(url: string, formatId: string, outTemplate: string, ffmpegPath: string) {
+  return spawn(
+    env.pythonPath,
+    [
+      "-m", "yt_dlp",
+      "-f", `${formatId}+bestaudio/best`,
+      "--no-warnings",
+      "--no-playlist",
+      "--merge-output-format", "mp4",
+      "--ffmpeg-location", ffmpegPath,
+      "-o", outTemplate,
+      url,
+    ],
+    { windowsHide: true }
+  );
+}
+
 export function spawnYtDlpAudioExtract(url: string, outFile: string, audioFormat: string, ffmpegPath: string) {
   return spawn(
     env.pythonPath,
