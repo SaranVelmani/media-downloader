@@ -56,14 +56,14 @@ export function FormatTable({ media }: { media: MediaInfo }) {
 
       <div>
         <h4 className="mb-3 text-sm font-semibold uppercase tracking-wide text-foreground/60">Video formats</h4>
-        <div className="glass overflow-x-auto rounded-2xl">
-          <table className="w-full min-w-[560px] text-sm">
+        <div className="glass rounded-2xl">
+          <table className="w-full table-fixed text-xs sm:text-sm">
             <thead>
               <tr className="border-b border-surface-border/60 text-left text-foreground/60">
-                <th className="px-4 py-3 font-medium">Resolution</th>
-                <th className="px-4 py-3 font-medium">Ext</th>
-                <th className="px-4 py-3 font-medium">Size</th>
-                <th className="px-4 py-3 font-medium" />
+                <th className="w-[30%] px-2 py-3 font-medium sm:px-4">Resolution</th>
+                <th className="w-[18%] px-2 py-3 font-medium sm:px-4">Ext</th>
+                <th className="w-[22%] px-2 py-3 font-medium sm:px-4">Size</th>
+                <th className="w-[30%] px-2 py-3 font-medium sm:px-4" />
               </tr>
             </thead>
             <tbody>
@@ -71,17 +71,17 @@ export function FormatTable({ media }: { media: MediaInfo }) {
                 const key = `video-${f.formatId}`;
                 return (
                   <tr key={f.formatId} className="border-b border-surface-border/30 last:border-0">
-                    <td className="px-4 py-3 font-medium">{f.resolution}</td>
-                    <td className="px-4 py-3 uppercase text-foreground/70">{f.ext}</td>
-                    <td className="px-4 py-3 text-foreground/70">{formatBytes(f.filesizeBytes)}</td>
-                    <td className="px-4 py-3 text-right">
+                    <td className="truncate px-2 py-3 font-medium sm:px-4">{f.resolution}</td>
+                    <td className="truncate px-2 py-3 uppercase text-foreground/70 sm:px-4">{f.ext}</td>
+                    <td className="truncate px-2 py-3 text-foreground/70 sm:px-4">{formatBytes(f.filesizeBytes)}</td>
+                    <td className="px-2 py-3 text-right sm:px-4">
                       <button
                         onClick={() => handleVideoDownload(f.formatId, f.ext)}
                         disabled={pending === key}
-                        className="inline-flex items-center gap-1.5 rounded-full bg-violet-500 px-3 py-1.5 text-xs font-medium text-white transition-transform hover:scale-105 active:scale-95 disabled:opacity-60"
+                        className="inline-flex items-center gap-1 rounded-full bg-violet-500 px-2.5 py-1.5 text-[11px] font-medium text-white transition-transform hover:scale-105 active:scale-95 disabled:opacity-60 sm:gap-1.5 sm:px-3 sm:text-xs"
                       >
                         {pending === key ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Download className="h-3.5 w-3.5" />}
-                        Download
+                        <span className="hidden sm:inline">Download</span>
                       </button>
                     </td>
                   </tr>
@@ -104,7 +104,7 @@ export function FormatTable({ media }: { media: MediaInfo }) {
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <div className="glass rounded-2xl p-4">
             <p className="mb-3 text-sm font-medium">Extract as MP3</p>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap justify-center gap-2">
               {MP3_BITRATES.map((bitrate) => {
                 const key = `mp3-${bitrate}`;
                 return (
@@ -124,7 +124,7 @@ export function FormatTable({ media }: { media: MediaInfo }) {
 
           <div className="glass rounded-2xl p-4">
             <p className="mb-3 text-sm font-medium">Other formats</p>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap justify-center gap-2">
               {(["m4a", "wav", "flac"] as const).map((fmt) => {
                 const key = `audio-${fmt}`;
                 return (
