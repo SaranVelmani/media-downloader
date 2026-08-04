@@ -19,6 +19,10 @@ function youtubeAuthArgs(): string[] {
   return env.youtubeCookiesPath ? ["--cookies", env.youtubeCookiesPath] : [];
 }
 
+// yt-dlp needs a JS runtime to solve YouTube's challenges; Node is already
+// in this image but isn't detected unless explicitly named.
+const JS_RUNTIME_ARGS = ["--js-runtimes", "node"];
+
 function runYtDlp(args: string[], timeoutMs = env.requestTimeoutMs): Promise<{ stdout: Buffer; stderr: string }> {
   return new Promise((resolve, reject) => {
     const child = spawn(env.pythonPath, ["-m", "yt_dlp", ...args], { windowsHide: true });
@@ -59,7 +63,7 @@ function runYtDlp(args: string[], timeoutMs = env.requestTimeoutMs): Promise<{ s
 }
 
 export async function fetchMetadataJson(url: string): Promise<any> {
-  const { stdout } = await runYtDlp(["-J", "-v", "--no-warnings", "--no-playlist", ...youtubeAuthArgs(), url]);
+  const { stdout } = await runYtDlp(["-J", "-v", "--no-warnings", "--no-playlist", ...youtubeAuthArgs(), ...JS_RUNTIME_ARGS, url]);
   try {
     return JSON.parse(stdout.toString("utf-8"));
   } catch {
@@ -76,7 +80,7 @@ export function spawnYtDlpStream(url: string, formatId: string) {
       "--no-warnings",
       "--no-playlist",
       "--no-part",
-      ...youtubeAuthArgs(),
+      ...youtubeAuthArgs(), ...JS_RUNTIME_ARGS,
       "-o", "-",
       url,
     ],
@@ -92,7 +96,7 @@ export function spawnYtDlpVideoDownload(url: string, formatId: string, outTempla
       "-f", `${formatId}+bestaudio/best`,
       "--no-playlist",
       "--merge-output-format", "mp4",
-      ...youtubeAuthArgs(),
+      ...youtubeAuthArgs(), ...JS_RUNTIME_ARGS,
       ...ffmpegLocationArgs(ffmpegPath),
       "-o", outTemplate,
       url,
@@ -112,7 +116,7 @@ export function spawnYtDlpAudioExtract(url: string, outFile: string, audioFormat
       "--extract-audio",
       "--audio-format", audioFormat,
       "--audio-quality", "0",
-      ...youtubeAuthArgs(),
+      ...youtubeAuthArgs(), ...JS_RUNTIME_ARGS,
       ...ffmpegLocationArgs(ffmpegPath),
       "-o", outFile,
       url,
