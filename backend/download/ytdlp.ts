@@ -11,12 +11,12 @@ function ffmpegLocationArgs(ffmpegPath: string): string[] {
 }
 
 // YouTube bot-checks requests from datacenter IPs ("Sign in to confirm
-// you're not a bot"), which is what a host like Render looks like. Cookies
-// from a real logged-in session clear that check; without them, forcing
-// the android/tv client is a weaker fallback that sometimes still works.
+// you're not a bot"). The bgutil-ytdlp-pot-provider plugin (installed in
+// the Dockerfile, server running as a sidecar) supplies a valid PO token
+// automatically for the default web client - no args needed here. Cookies
+// are an optional extra if a secret file is present.
 function youtubeAuthArgs(): string[] {
-  if (env.youtubeCookiesPath) return ["--cookies", env.youtubeCookiesPath];
-  return ["--extractor-args", "youtube:player_client=android,tv"];
+  return env.youtubeCookiesPath ? ["--cookies", env.youtubeCookiesPath] : [];
 }
 
 function runYtDlp(args: string[], timeoutMs = env.requestTimeoutMs): Promise<{ stdout: Buffer; stderr: string }> {
