@@ -36,10 +36,12 @@ ENV NODE_ENV=production
 EXPOSE 4000
 
 # Docker caches the pip install layer above indefinitely across deploys, so
-# yt-dlp goes stale even on unrelated redeploys - YouTube breaks old
-# extractors often enough that this matters. Upgrade at boot instead.
+# both packages go stale even on unrelated redeploys - upgrade both together
+# at boot. Upgrading only yt-dlp while leaving the PO token plugin pinned
+# risks a version mismatch where the plugin silently stops actually
+# supplying a valid token even though it still registers as available.
 CMD ["sh", "-c", "\
-    pip3 install --quiet --no-cache-dir --break-system-packages -U yt-dlp && \
+    pip3 install --quiet --no-cache-dir --break-system-packages -U yt-dlp bgutil-ytdlp-pot-provider && \
     node /opt/bgutil/server/build/main.js --port 4416 & \
     for i in $(seq 1 30); do curl -sf http://127.0.0.1:4416/ping >/dev/null 2>&1 && break; sleep 0.5; done && \
     node dist/server.js \

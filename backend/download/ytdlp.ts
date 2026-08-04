@@ -59,7 +59,7 @@ function runYtDlp(args: string[], timeoutMs = env.requestTimeoutMs): Promise<{ s
 }
 
 export async function fetchMetadataJson(url: string): Promise<any> {
-  const { stdout } = await runYtDlp(["-J", "--no-warnings", "--no-playlist", ...youtubeAuthArgs(), url]);
+  const { stdout } = await runYtDlp(["-J", "-v", "--no-warnings", "--no-playlist", ...youtubeAuthArgs(), url]);
   try {
     return JSON.parse(stdout.toString("utf-8"));
   } catch {
