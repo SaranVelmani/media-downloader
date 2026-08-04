@@ -1,3 +1,4 @@
+import fs from "fs";
 import path from "path";
 
 function findFfmpeg(): string {
@@ -8,11 +9,17 @@ function findFfmpeg(): string {
   return "ffmpeg";
 }
 
+function findYoutubeCookies(): string | undefined {
+  const configured = process.env.YOUTUBE_COOKIES_PATH ?? "/etc/secrets/youtube-cookies.txt";
+  return fs.existsSync(configured) ? configured : undefined;
+}
+
 export const env = {
   port: Number(process.env.PORT ?? 4000),
   corsOrigins: (process.env.CORS_ORIGIN ?? "http://localhost:3000,http://localhost:3001").split(","),
   pythonPath: process.env.PYTHON_PATH ?? "python",
   ffmpegPath: findFfmpeg(),
+  youtubeCookiesPath: findYoutubeCookies(),
   tempDir: process.env.TEMP_DIR ?? path.join(process.cwd(), ".tmp"),
   rateLimitWindowMs: 60_000,
   rateLimitMax: 30,

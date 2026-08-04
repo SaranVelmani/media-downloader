@@ -10,10 +10,14 @@ function ffmpegLocationArgs(ffmpegPath: string): string[] {
   return path.isAbsolute(ffmpegPath) ? ["--ffmpeg-location", ffmpegPath] : [];
 }
 
-// YouTube's default "web" client bot-checks requests from datacenter IPs
-// ("Sign in to confirm you're not a bot"), which is what a host like Render
-// looks like. The android/tv clients skip that check.
-const YOUTUBE_ANTI_BOT_ARGS = ["--extractor-args", "youtube:player_client=android,tv"];
+// YouTube bot-checks requests from datacenter IPs ("Sign in to confirm
+// you're not a bot"), which is what a host like Render looks like. Cookies
+// from a real logged-in session clear that check; without them, forcing
+// the android/tv client is a weaker fallback that sometimes still works.
+function youtubeAuthArgs(): string[] {
+  if (env.youtubeCookiesPath) return ["--cookies", env.youtubeCookiesPath];
+  return ["--extractor-args", "youtube:player_client=android,tv"];
+}
 
 function runYtDlp(args: string[], timeoutMs = env.requestTimeoutMs): Promise<{ stdout: Buffer; stderr: string }> {
   return new Promise((resolve, reject) => {
@@ -55,7 +59,7 @@ function runYtDlp(args: string[], timeoutMs = env.requestTimeoutMs): Promise<{ s
 }
 
 export async function fetchMetadataJson(url: string): Promise<any> {
-  const { stdout } = await runYtDlp(["-J", "--no-warnings", "--no-playlist", ...YOUTUBE_ANTI_BOT_ARGS, url]);
+  const { stdout } = await runYtDlp(["-J", "--no-warnings", "--no-playlist", ...youtubeAuthArgs(), url]);
   try {
     return JSON.parse(stdout.toString("utf-8"));
   } catch {
@@ -72,7 +76,7 @@ export function spawnYtDlpStream(url: string, formatId: string) {
       "--no-warnings",
       "--no-playlist",
       "--no-part",
-      ...YOUTUBE_ANTI_BOT_ARGS,
+      ...youtubeAuthArgs(),
       "-o", "-",
       url,
     ],
@@ -88,7 +92,7 @@ export function spawnYtDlpVideoDownload(url: string, formatId: string, outTempla
       "-f", `${formatId}+bestaudio/best`,
       "--no-playlist",
       "--merge-output-format", "mp4",
-      ...YOUTUBE_ANTI_BOT_ARGS,
+      ...youtubeAuthArgs(),
       ...ffmpegLocationArgs(ffmpegPath),
       "-o", outTemplate,
       url,
@@ -108,7 +112,7 @@ export function spawnYtDlpAudioExtract(url: string, outFile: string, audioFormat
       "--extract-audio",
       "--audio-format", audioFormat,
       "--audio-quality", "0",
-      ...YOUTUBE_ANTI_BOT_ARGS,
+      ...youtubeAuthArgs(),
       ...ffmpegLocationArgs(ffmpegPath),
       "-o", outFile,
       url,
