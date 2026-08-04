@@ -1,6 +1,10 @@
 import { MediaInfo } from "@/types/media";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
+// Vercel's dashboard-configured NEXT_PUBLIC_API_URL is injected directly into
+// process.env and always wins over any .env file value with the same name,
+// so a one-off override needs its own var name to actually take effect.
+const API_BASE =
+  process.env.NEXT_PUBLIC_BACKEND_URL ?? process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
 
 export class ApiRequestError extends Error {
   code: string;
