@@ -21,4 +21,7 @@ ENV NODE_ENV=production
 
 EXPOSE 4000
 
-CMD ["node", "dist/server.js"]
+# Docker caches the pip install layer above indefinitely across deploys, so
+# yt-dlp goes stale even on unrelated redeploys - YouTube breaks old
+# extractors often enough that this matters. Upgrade at boot instead.
+CMD ["sh", "-c", "pip3 install --quiet --no-cache-dir --break-system-packages -U yt-dlp && node dist/server.js"]
