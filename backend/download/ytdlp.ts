@@ -40,6 +40,7 @@ function runYtDlp(args: string[], timeoutMs = env.requestTimeoutMs): Promise<{ s
       settled = true;
       clearTimeout(timer);
       if (code !== 0) {
+        console.error(`yt-dlp exited with code ${code}, args: ${args.join(" ")}\n${stderr}`);
         reject(classifyProviderError(stderr || `yt-dlp exited with code ${code}`));
         return;
       }
